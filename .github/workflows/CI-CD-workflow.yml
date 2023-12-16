@@ -32,3 +32,22 @@ jobs:
         with:
           service-id: ${{ secrets.EXAM_SERVICE_ID }}
           api-key: ${{ secrets.MARTINSVT_RENDER_API_KEY }}
+      - name: Waiting for Deployment
+        run: sleep 180
+
+  ui-test:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js x18
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+        cache: 'npm'
+    - name: Build app
+      run: npm install
+    - name: Install Playwrite
+      run: npx playwright install
+    - name: UI Testing
+      run: npm run test:ui  
